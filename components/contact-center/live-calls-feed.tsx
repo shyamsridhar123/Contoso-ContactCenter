@@ -1,19 +1,17 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { 
-  Phone, 
-  Headphones, 
-  AlertTriangle, 
-  TrendingUp, 
+import {
+  Phone,
+  Headphones,
+  AlertTriangle,
+  TrendingUp,
   TrendingDown,
   Minus,
   Eye,
-  Volume2
+  Volume2,
 } from "lucide-react"
 
 export interface LiveCall {
@@ -31,27 +29,30 @@ export interface LiveCall {
 }
 
 const sentimentConfig = {
-  positive: { 
-    color: "text-emerald-500", 
-    bg: "bg-emerald-500/10",
-    icon: TrendingUp 
+  positive: {
+    text: "text-emerald-300",
+    bg: "bg-emerald-400/10 border-emerald-400/20",
+    icon: TrendingUp,
+    label: "Positive",
   },
-  neutral: { 
-    color: "text-amber-500", 
-    bg: "bg-amber-500/10",
-    icon: Minus 
+  neutral: {
+    text: "text-amber-300",
+    bg: "bg-amber-400/10 border-amber-400/20",
+    icon: Minus,
+    label: "Neutral",
   },
-  negative: { 
-    color: "text-red-500", 
-    bg: "bg-red-500/10",
-    icon: TrendingDown 
+  negative: {
+    text: "text-rose-300",
+    bg: "bg-rose-400/10 border-rose-400/20",
+    icon: TrendingDown,
+    label: "Negative",
   },
 }
 
 const trendConfig = {
-  improving: { icon: TrendingUp, color: "text-emerald-500" },
+  improving: { icon: TrendingUp, color: "text-emerald-300" },
   stable: { icon: Minus, color: "text-muted-foreground" },
-  declining: { icon: TrendingDown, color: "text-red-500" },
+  declining: { icon: TrendingDown, color: "text-rose-300" },
 }
 
 function LiveCallCard({ call }: { call: LiveCall }) {
@@ -63,60 +64,82 @@ function LiveCallCard({ call }: { call: LiveCall }) {
   return (
     <div
       className={cn(
-        "p-3 rounded-lg border bg-card transition-all hover:shadow-sm",
-        isHighRisk && "border-red-500/30 bg-red-500/5"
+        "relative overflow-hidden rounded-xl glass p-3 transition-all duration-300",
+        "hover:border-white/15",
+        isHighRisk && "ring-1 ring-rose-400/30 border-rose-400/20",
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
+      {isHighRisk && (
+        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl bg-rose-500/20 pointer-events-none" />
+      )}
+
+      <div className="relative flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative shrink-0">
-            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+            <div className="w-9 h-9 rounded-full glass-subtle flex items-center justify-center text-[11px] font-semibold">
               {call.agentInitials}
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-background animate-pulse" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-background animate-slow-pulse" />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="font-medium text-sm truncate">{call.agentName}</p>
-              <Phone className="w-3 h-3 text-emerald-500" />
+            <div className="flex items-center gap-1.5">
+              <p className="font-medium text-xs truncate">{call.agentName}</p>
+              <Phone className="w-2.5 h-2.5 text-emerald-300 shrink-0" />
             </div>
-            <p className="text-xs text-muted-foreground truncate">
-              {call.customerType} • {call.queue}
+            <p className="text-[10px] text-muted-foreground truncate">
+              {call.customerType} · {call.queue}
             </p>
           </div>
         </div>
-        
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-sm font-mono tabular-nums text-muted-foreground">
+
+        <div className="flex items-center gap-1 shrink-0">
+          <span className="text-[11px] font-mono tabular-nums text-muted-foreground">
             {call.duration}
           </span>
-          <Button variant="ghost" size="icon" className="h-7 w-7">
-            <Eye className="w-3.5 h-3.5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 hover:bg-white/10"
+          >
+            <Eye className="w-3 h-3" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7">
-            <Volume2 className="w-3.5 h-3.5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 hover:bg-white/10"
+          >
+            <Volume2 className="w-3 h-3" />
           </Button>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2 flex-wrap">
-        <Badge variant="secondary" className="text-xs">
+      <div className="relative mt-2.5 flex items-center gap-1.5 flex-wrap">
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded border border-white/10 bg-white/5 text-[9px] font-medium uppercase tracking-wider">
           {call.topic}
-        </Badge>
-        <Badge className={cn("text-xs", sentimentCfg.bg, sentimentCfg.color)}>
-          {call.sentiment}
-          <TrendIcon className={cn("w-3 h-3 ml-1", trendCfg.color)} />
-        </Badge>
+        </span>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[9px] font-medium uppercase tracking-wider",
+            sentimentCfg.bg,
+            sentimentCfg.text,
+          )}
+        >
+          {sentimentCfg.label}
+          <TrendIcon className={cn("w-2.5 h-2.5", trendCfg.color)} strokeWidth={3} />
+        </span>
         {call.flags.map((flag) => (
-          <Badge key={flag} variant="destructive" className="text-xs">
-            <AlertTriangle className="w-3 h-3 mr-1" />
+          <span
+            key={flag}
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-rose-400/30 bg-rose-400/10 text-rose-300 text-[9px] font-medium uppercase tracking-wider"
+          >
+            <AlertTriangle className="w-2.5 h-2.5" />
             {flag}
-          </Badge>
+          </span>
         ))}
       </div>
 
       {call.transcriptPreview && (
-        <div className="mt-3 p-2 rounded bg-muted/50 text-xs text-muted-foreground italic">
+        <div className="relative mt-2.5 p-2 rounded-lg bg-white/[0.03] border border-white/5 text-[10px] text-muted-foreground italic leading-relaxed">
           &ldquo;{call.transcriptPreview}&rdquo;
         </div>
       )}
@@ -131,37 +154,38 @@ interface LiveCallsFeedProps {
 
 export function LiveCallsFeed({ calls, title = "Live Calls" }: LiveCallsFeedProps) {
   const highRiskCalls = calls.filter(
-    (c) => c.sentiment === "negative" || c.flags.length > 0
+    (c) => c.sentiment === "negative" || c.flags.length > 0,
   ).length
 
   return (
-    <Card className="flex flex-col h-full">
-      <CardHeader className="pb-3 shrink-0">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Headphones className="w-4 h-4" />
-            {title}
-            <Badge variant="secondary" className="ml-1">
-              {calls.length} active
-            </Badge>
-          </CardTitle>
-          {highRiskCalls > 0 && (
-            <Badge variant="destructive" className="animate-pulse">
-              <AlertTriangle className="w-3 h-3 mr-1" />
-              {highRiskCalls} needs attention
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-hidden p-0">
-        <ScrollArea className="h-[400px] px-6">
-          <div className="space-y-3 pb-4">
-            {calls.map((call) => (
-              <LiveCallCard key={call.id} call={call} />
-            ))}
+    <div className="rounded-2xl glass p-5 flex flex-col h-full">
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg glass-subtle">
+            <Headphones className="w-4 h-4 text-sky-300" />
           </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+          <h3 className="text-sm font-semibold uppercase tracking-wider">{title}</h3>
+          <Badge variant="outline" className="border-white/10 bg-white/5 text-[10px] ml-1 tabular-nums">
+            {calls.length}
+          </Badge>
+        </div>
+        {highRiskCalls > 0 && (
+          <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-rose-400/30 bg-rose-400/10 text-rose-300 text-[10px] font-medium uppercase tracking-wider">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-400" />
+            </span>
+            {highRiskCalls} needs attention
+          </div>
+        )}
+      </div>
+      <div className="flex-1 overflow-y-auto scrollbar-thin pr-1 -mr-1 max-h-[520px]">
+        <div className="space-y-2.5">
+          {calls.map((call) => (
+            <LiveCallCard key={call.id} call={call} />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
