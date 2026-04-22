@@ -117,7 +117,7 @@ function QueueCard({ queue }: { queue: QueueData }) {
         <div className="flex items-center justify-between text-[10px] uppercase tracking-wider">
           <span className="text-muted-foreground">Service Level</span>
           <span className={cn("font-semibold tabular-nums", slCfg.text)}>
-            {queue.serviceLevel}% / {queue.serviceLevelTarget}%
+            {queue.serviceLevel.toFixed(1)}% / {queue.serviceLevelTarget}%
           </span>
         </div>
         <ProgressBar value={queue.serviceLevel} color={slCfg.bar} glow={slCfg.glow} />
@@ -186,7 +186,7 @@ export function QueueStatus({ queues, title = "Queues" }: QueueStatusProps) {
                 avgServiceLevel >= 80 ? "text-emerald-300" : "text-amber-300",
               )}
             >
-              {avgServiceLevel}%
+              {avgServiceLevel.toFixed(1)}%
             </span>
           </div>
         </div>
