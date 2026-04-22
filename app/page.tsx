@@ -37,38 +37,31 @@ function LiveIndicator() {
 }
 
 function CurrentTime() {
-  const [time, setTime] = useState<Date | null>(null)
+  const [time, setTime] = useState<Date>(new Date())
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     setTime(new Date())
     const interval = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(interval)
   }, [])
 
-  if (!time) {
-    return (
-      <div className="text-right">
-        <p className="text-xl font-bold tabular-nums tracking-tight">--:--:--</p>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Loading</p>
-      </div>
-    )
-  }
-
   return (
     <div className="text-right">
-      <p className="text-xl font-bold tabular-nums tracking-tight text-gradient">
-        {time.toLocaleTimeString("en-US", {
+      <p className="text-xl font-bold tabular-nums tracking-tight text-gradient" suppressHydrationWarning>
+        {mounted ? time.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-        })}
+        }) : "--:--:--"}
       </p>
-      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-        {time.toLocaleDateString("en-US", {
+      <p className="text-[10px] text-muted-foreground uppercase tracking-wider" suppressHydrationWarning>
+        {mounted ? time.toLocaleDateString("en-US", {
           weekday: "short",
           month: "short",
           day: "numeric",
-        })}
+        }) : "Loading"}
       </p>
     </div>
   )
