@@ -89,13 +89,13 @@ function SiteRow({ site }: { site: SiteData }) {
 
       <div className="text-center">
         <p className={cn("text-xs font-semibold tabular-nums", statusColors[slStatus])}>
-          {site.serviceLevel}%
+          {site.serviceLevel.toFixed(1)}%
         </p>
       </div>
 
       <div className="text-center">
         <p className={cn("text-xs font-semibold tabular-nums", statusColors[fcrStatus])}>
-          {site.fcr}%
+          {site.fcr.toFixed(1)}%
         </p>
       </div>
 

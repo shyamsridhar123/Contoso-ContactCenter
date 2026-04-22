@@ -221,8 +221,8 @@ export default function CommandCenterPage() {
               Good morning, Operations.
             </h1>
             <p className="text-sm text-muted-foreground mt-1 text-pretty">
-              {agents.filter((a) => a.status === "on-call").length} agents on live calls ·{" "}
-              <span className="text-amber-300">{metrics.callsInQueue}</span> customers waiting ·{" "}
+              {agents.filter((a) => a.status === "on-call").length} agents on live calls · {" "}
+              <span className="text-amber-300">{metrics.callsInQueue}</span> customers waiting · {" "}
               <span className="text-emerald-300">{metrics.fcr.toFixed(1)}%</span> FCR today
             </p>
           </div>
