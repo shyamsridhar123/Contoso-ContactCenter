@@ -16,3 +16,12 @@ test-results/
 .claude/
 .omc/
 **/.omc/
+
+# Local scratch runtimes
+.codex-temp/
+**/.codex-temp/
+
+# HyperFrames derived audio intermediates
+contoso-video/assets/flash_scene*.mp3
+contoso-video/assets/fx_*.wav
+contoso-video/assets/music_flash.mp3
