@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { cn } from "@/lib/utils"
 import { ArrowUp, ArrowDown, Minus } from "lucide-react"
 
@@ -71,7 +71,8 @@ export function RadialGauge({
   const [displayValue, setDisplayValue] = useState(animate ? 0 : value)
   const config = sizeConfig[size]
   const colors = colorConfig[colorScheme]
-  const gradientId = useRef(`gauge-${Math.random().toString(36).slice(2, 9)}`).current
+  const reactId = useId()
+  const gradientId = `gauge-${reactId.replace(/:/g, "")}`
 
   const radius = (config.width - config.strokeWidth) / 2
   const circumference = radius * 2 * Math.PI

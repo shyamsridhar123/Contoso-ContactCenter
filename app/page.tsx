@@ -1,12 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useLiveSimulation } from "@/hooks/use-live-simulation"
+import { useCallTranscript } from "@/hooks/use-call-transcript"
 import { RadialGauge } from "@/components/contact-center/radial-gauge"
 import { LiveMetricCard } from "@/components/contact-center/live-metric-card"
 import { AgentStatusGrid } from "@/components/contact-center/agent-status-grid"
 import { QueueStatus } from "@/components/contact-center/queue-status"
 import { LiveCallsFeed } from "@/components/contact-center/live-calls-feed"
+import type { LiveCall } from "@/components/contact-center/live-calls-feed"
+import { CallListenPanel } from "@/components/contact-center/call-listen-panel"
 import { SiteComparison } from "@/components/contact-center/site-comparison"
 import { TopicTrends } from "@/components/contact-center/topic-trends"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -137,6 +140,16 @@ function StatPill({
 
 export default function CommandCenterPage() {
   const { agents, queues, liveCalls, sites, topics, metrics } = useLiveSimulation(3000)
+  const [selectedCall, setSelectedCall] = useState<LiveCall | null>(null)
+  const transcriptState = useCallTranscript(selectedCall?.id ?? null)
+
+  const handleMonitorCall = useCallback((call: LiveCall) => {
+    setSelectedCall(call)
+  }, [])
+
+  const handleClosePanel = useCallback(() => {
+    setSelectedCall(null)
+  }, [])
 
   const fcrStatus =
     metrics.fcr >= metrics.fcrTarget
@@ -375,7 +388,7 @@ export default function CommandCenterPage() {
           <TabsContent value="overview" className="space-y-5 mt-0">
             <div className="grid lg:grid-cols-3 gap-5">
               <div className="lg:col-span-1">
-                <LiveCallsFeed calls={liveCalls} />
+                <LiveCallsFeed calls={liveCalls} onMonitor={handleMonitorCall} />
               </div>
               <div className="lg:col-span-2">
                 <QueueStatus queues={queues} />
@@ -392,7 +405,7 @@ export default function CommandCenterPage() {
             <QueueStatus queues={queues} />
             <div className="grid lg:grid-cols-2 gap-5">
               <TopicTrends topics={topics} />
-              <LiveCallsFeed calls={liveCalls} title="Calls Needing Attention" />
+              <LiveCallsFeed calls={liveCalls} title="Calls Needing Attention" onMonitor={handleMonitorCall} />
             </div>
           </TabsContent>
 
@@ -441,6 +454,13 @@ export default function CommandCenterPage() {
           </div>
         </footer>
       </main>
+
+      <CallListenPanel
+        call={selectedCall}
+        transcriptState={transcriptState}
+        open={!!selectedCall}
+        onClose={handleClosePanel}
+      />
     </div>
   )
 }

@@ -1,35 +1,53 @@
-# Contoso-ContactCenter
+# Contoso Contact Center
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+Contoso Contact Center is a real-time operations cockpit for Contoso Bank support leaders. It tracks queue health, agent availability, live customer conversations, site performance, and emerging topics in one executive-ready dashboard.
 
-## Built with v0
+## Highlights
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+- **Live operations overview** with FCR, AHT, CSAT, service level, NPS, and queue pressure indicators.
+- **Call monitoring workflow** for opening a live-call detail panel with transcript state and escalation signals.
+- **Agent and queue intelligence** covering availability, wrap-up status, wait time, abandonment, and workload distribution.
+- **Site and topic analytics** for comparing contact center locations and spotting trends across customer conversations.
+- **Branded metadata and social previews** for a polished Contoso Bank sharing experience.
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_wemEeDtDcEqHEaqSfa6xxsK6NkrI)
+## Tech stack
 
-## Getting Started
+- Next.js 16 App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- Radix UI primitives
+- Recharts and Lucide icons
 
-First, run the development server:
+## Local development
+
+Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+Start the development server:
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Useful scripts
 
-## Learn More
+```bash
+pnpm lint
+pnpm build
+pnpm start
+```
 
-To learn more, take a look at the following resources:
+## Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+Set `NEXT_PUBLIC_SITE_URL` when the app is hosted so generated metadata and social image URLs use the production origin:
 
-<a href="https://v0.app/chat/api/kiro/clone/shyamsridhar123/Contoso-ContactCenter" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-domain.example
+```
+
+If this variable is not set, metadata falls back to `http://localhost:3000` for local development.

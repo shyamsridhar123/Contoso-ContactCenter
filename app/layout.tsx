@@ -1,31 +1,38 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+import { BRAND_DESCRIPTION, BRAND_TITLE } from './brand-media'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+function resolveMetadataBase() {
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
+
+  if (!configuredSiteUrl) {
+    return new URL('http://localhost:3000')
+  }
+
+  return new URL(
+    configuredSiteUrl.startsWith('http')
+      ? configuredSiteUrl
+      : `https://${configuredSiteUrl}`,
+  )
+}
+
+const metadataBase = resolveMetadataBase()
 
 export const metadata: Metadata = {
-  title: 'Contoso Bank · Command Center',
-  description: 'AI-Enhanced Contact Center Platform — Real-time monitoring and analytics',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+  title: BRAND_TITLE,
+  description: BRAND_DESCRIPTION,
+  applicationName: 'Contoso Command Center',
+  metadataBase,
+  openGraph: {
+    title: BRAND_TITLE,
+    description: BRAND_DESCRIPTION,
+    type: 'website',
+    siteName: 'Contoso Command Center',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: BRAND_TITLE,
+    description: BRAND_DESCRIPTION,
   },
 }
 
@@ -44,7 +51,6 @@ export default function RootLayout({
         <div className="relative z-10">
           {children}
         </div>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

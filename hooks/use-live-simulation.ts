@@ -242,14 +242,55 @@ function generateInitialMetrics(): Metrics {
   }
 }
 
+// Deterministic empty metrics used for SSR / first client render to avoid
+// hydration mismatches caused by Math.random() in initial generators.
+function emptyMetrics(): Metrics {
+  return {
+    fcr: 0,
+    fcrTarget: 0,
+    fcrTrend: 0,
+    aht: 0,
+    ahtTarget: 0,
+    ahtTrend: 0,
+    csat: 0,
+    csatTarget: 0,
+    csatTrend: 0,
+    serviceLevel: 0,
+    serviceLevelTarget: 0,
+    nps: 0,
+    npsTrend: 0,
+    activeAgents: 0,
+    totalCalls: 0,
+    callsInQueue: 0,
+    abandonRate: 0,
+    callsHandledToday: 0,
+    avgWaitTime: 0,
+    fcrSparkline: [],
+    ahtSparkline: [],
+    csatSparkline: [],
+    slSparkline: [],
+  }
+}
+
 // Main hook
 export function useLiveSimulation(updateInterval = 3000) {
-  const [agents, setAgents] = useState<Agent[]>(() => generateInitialAgents())
-  const [queues, setQueues] = useState<QueueData[]>(() => generateInitialQueues())
-  const [liveCalls, setLiveCalls] = useState<LiveCall[]>(() => generateInitialCalls(generateInitialAgents()))
-  const [sites, setSites] = useState<SiteData[]>(() => generateInitialSites())
-  const [topics, setTopics] = useState<TopicData[]>(() => generateInitialTopics())
-  const [metrics, setMetrics] = useState<Metrics>(() => generateInitialMetrics())
+  // Start empty so server and first client render match; populate on mount.
+  const [agents, setAgents] = useState<Agent[]>([])
+  const [queues, setQueues] = useState<QueueData[]>([])
+  const [liveCalls, setLiveCalls] = useState<LiveCall[]>([])
+  const [sites, setSites] = useState<SiteData[]>([])
+  const [topics, setTopics] = useState<TopicData[]>([])
+  const [metrics, setMetrics] = useState<Metrics>(() => emptyMetrics())
+
+  useEffect(() => {
+    const initialAgents = generateInitialAgents()
+    setAgents(initialAgents)
+    setQueues(generateInitialQueues())
+    setLiveCalls(generateInitialCalls(initialAgents))
+    setSites(generateInitialSites())
+    setTopics(generateInitialTopics())
+    setMetrics(generateInitialMetrics())
+  }, [])
 
   const updateSimulation = useCallback(() => {
     // Update agents

@@ -55,7 +55,7 @@ const trendConfig = {
   declining: { icon: TrendingDown, color: "text-rose-300" },
 }
 
-function LiveCallCard({ call }: { call: LiveCall }) {
+function LiveCallCard({ call, onMonitor }: { call: LiveCall; onMonitor?: (call: LiveCall) => void }) {
   const sentimentCfg = sentimentConfig[call.sentiment]
   const trendCfg = trendConfig[call.sentimentTrend]
   const TrendIcon = trendCfg.icon
@@ -100,6 +100,7 @@ function LiveCallCard({ call }: { call: LiveCall }) {
             variant="ghost"
             size="icon"
             className="h-6 w-6 hover:bg-white/10"
+            onClick={() => onMonitor?.(call)}
           >
             <Eye className="w-3 h-3" />
           </Button>
@@ -107,6 +108,7 @@ function LiveCallCard({ call }: { call: LiveCall }) {
             variant="ghost"
             size="icon"
             className="h-6 w-6 hover:bg-white/10"
+            onClick={() => onMonitor?.(call)}
           >
             <Volume2 className="w-3 h-3" />
           </Button>
@@ -150,9 +152,10 @@ function LiveCallCard({ call }: { call: LiveCall }) {
 interface LiveCallsFeedProps {
   calls: LiveCall[]
   title?: string
+  onMonitor?: (call: LiveCall) => void
 }
 
-export function LiveCallsFeed({ calls, title = "Live Calls" }: LiveCallsFeedProps) {
+export function LiveCallsFeed({ calls, title = "Live Calls", onMonitor }: LiveCallsFeedProps) {
   const highRiskCalls = calls.filter(
     (c) => c.sentiment === "negative" || c.flags.length > 0,
   ).length
@@ -182,7 +185,7 @@ export function LiveCallsFeed({ calls, title = "Live Calls" }: LiveCallsFeedProp
       <div className="flex-1 overflow-y-auto scrollbar-thin pr-1 -mr-1 max-h-[520px]">
         <div className="space-y-2.5">
           {calls.map((call) => (
-            <LiveCallCard key={call.id} call={call} />
+            <LiveCallCard key={call.id} call={call} onMonitor={onMonitor} />
           ))}
         </div>
       </div>
